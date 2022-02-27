@@ -1,0 +1,43 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.screen {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-image: url("img/winter-background-43.jpg");
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 500px;
+  background-color: rgba(128, 128, 128, 0.5);
+  border-radius: 20px;
+}
+
+.container__clock {
+  font-size: 7rem;
+}
+
+.container__weather {
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.weather__temp {
+  font-size: 3.5rem;
+}
+
+.weather__city {
+  font-size: 1.5rem;
+}
