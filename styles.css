@@ -2,42 +2,56 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-family: "Montserrat", sans-serif;
+  font-family: "Open Sans", sans-serif;
 }
 
-.screen {
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;1,200;1,300;1,400;1,500;1,600;1,700&family=Open+Sans:wght@400;500;700&display=swap");
+
+body {
   height: 100vh;
   width: 100vw;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-image: url("img/winter-background-43.jpg");
+  background-color: #111111;
 }
 
-.container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 500px;
-  background-color: rgba(128, 128, 128, 0.5);
-  border-radius: 20px;
+.detail-bar {
+  position: absolute;
+  right: 0;
+  width: 300px;
+  height: 100vh;
+  background-color: rgb(32, 32, 32);
 }
 
-.container__clock {
-  font-size: 7rem;
-}
-
-.container__weather {
+.weather-summary {
   color: white;
   display: flex;
+  align-items: center;
+  margin: auto auto 100px 100px;
+}
+
+.weather-summary div {
+  margin: 0px 10px;
+}
+
+.weather-summary__realtemp {
+  font-size: 5rem;
+}
+
+.weather-summary__condition {
+  display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-.weather__temp {
-  font-size: 3.5rem;
+.weather-summary__city-time {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-.weather__city {
-  font-size: 1.5rem;
+.weather-summary__city-time__city {
+  font-size: 5rem;
 }
