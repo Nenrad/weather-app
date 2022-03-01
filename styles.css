@@ -3,10 +3,9 @@
   padding: 0;
   box-sizing: border-box;
   font-family: "Montserrat", sans-serif;
-  font-family: "Open Sans", sans-serif;
 }
 
-@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;1,200;1,300;1,400;1,500;1,600;1,700&family=Open+Sans:wght@400;500;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,300;0,400;0,500;0,600;0,700;1,200;1,300;1,400;1,500;1,600;1,700&family=Open+Sans:wght@400;500;700&display=swap");
 
 body {
   height: 100vh;
@@ -17,7 +16,15 @@ body {
   background-color: #111111;
 }
 
+.hidden {
+  display: none;
+}
+
 .detail-bar {
+  font-size: 0.8rem;
+  color: white;
+  display: flex;
+  flex-direction: column;
   position: absolute;
   right: 0;
   width: 300px;
@@ -25,11 +32,72 @@ body {
   background-color: rgb(32, 32, 32);
 }
 
+.detail-bar__search {
+  display: flex;
+  justify-content: space-between;
+}
+
+.detail-bar__search button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  border: none;
+}
+
+.detail-bar__search input {
+  flex: 1;
+  border: none;
+}
+
+.detail-bar__details-section {
+  margin: auto 10px 100px 30px;
+}
+
+.detail-bar__details-section h1 {
+  font-size: 1.5rem;
+}
+
+.detail-bar__details-section__details {
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+}
+
+.details__detail {
+  color: rgb(107, 107, 107);
+  font-weight: 100;
+  font-family: Montserrat;
+  margin: 10px 0px;
+}
+
+.details__detail span {
+  color: white;
+}
+.container {
+  display: flex;
+  flex-direction: column;
+  margin: auto auto 100px 100px;
+}
+
+.unit-selector {
+  font-weight: 700;
+  font-size: 0.7rem;
+  margin-left: auto;
+  width: fit-content;
+  color: white;
+  cursor: pointer;
+}
+
+.inactive-unit {
+  color: rgb(68, 68, 68);
+}
+
 .weather-summary {
   color: white;
   display: flex;
   align-items: center;
-  margin: auto auto 100px 100px;
 }
 
 .weather-summary div {
@@ -37,6 +105,7 @@ body {
 }
 
 .weather-summary__realtemp {
+  width: fit-content;
   font-size: 5rem;
 }
 

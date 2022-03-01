@@ -3,7 +3,7 @@ export const BASE_URL = "http://api.weatherapi.com/v1";
 export const CURRENT_WEATHER_METHOD = "/current.json?";
 export const IP_LOOKUP_METHOD = "/ip.json?";
 export const FORECAST_LOOKUP_METHOD = "/forecast.json?";
-export const CONFIG = "&aqi=no";
+export const CONFIG = "&aqi=no&alerts=yes";
 export const IP_LOOKUP_ENDPOINT = "https://api.ipify.org/?format=json";
 
 export const getWeatherByLocationEndpoint = (city) => {

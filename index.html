@@ -8,8 +8,47 @@
     <title>Weather-Clock-Music</title>
   </head>
   <body>
-    <div class="detail-bar"></div>
-    <div class="weather-summary"></div>
+    <div class="detail-bar">
+      <section class="detail-bar__search">
+        <input />
+        <button type="submit">
+          <img src="img/search-icon.svg" width="25px" />
+        </button>
+      </section>
+      <section class="detail-bar__details-section">
+        <h1>Weather Details</h1>
+        <div class="detail-bar__details-section__details">
+          <h2 id="feelslike_f" class="details__feels-like details__detail">
+            Feels Like:<span></span><span>°F</span>
+          </h2>
+          <h2 id="humidity" class="details__humidity details__detail">
+            Humidity:<span class="value"></span><span>%</span>
+          </h2>
+          <h2 id="precip_in" class="details__precipitation details__detail">
+            Precipitation:<span class="value"></span><span>%</span>
+          </h2>
+          <h2 id="wind_mph" class="details__wind details__detail">
+            Wind:<span class="value"></span> <span>mph</span>
+          </h2>
+          <h2 id="gust_mph" class="details__gust details__detail">
+            Gust:<span class="value"></span> <span>mph</span>
+          </h2>
+          <h2 id="pressure_in" class="details__pressure details__detail">
+            Pressure:<span class="value"></span> <span>MB</span>
+          </h2>
+        </div>
+      </section>
+    </div>
+    <div class="container">
+      <div class="unit-selector">
+        <span class="unit-selector__fahrenheit" role="button">°F</span>
+        <span>|</span>
+        <span class="unit-selector__celsius inactive-unit" role="button"
+          >°C</span
+        >
+      </div>
+      <div class="weather-summary"></div>
+    </div>
   </body>
   <script type="module" src="main.js"></script>
 </html>
