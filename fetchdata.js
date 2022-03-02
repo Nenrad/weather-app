@@ -3,11 +3,26 @@ export const BASE_URL = "http://api.weatherapi.com/v1";
 export const CURRENT_WEATHER_METHOD = "/current.json?";
 export const IP_LOOKUP_METHOD = "/ip.json?";
 export const FORECAST_LOOKUP_METHOD = "/forecast.json?";
+export const SEARCH_METHOD = "/search.json?";
 export const CONFIG = "&aqi=no&alerts=yes";
 export const IP_LOOKUP_ENDPOINT = "https://api.ipify.org/?format=json";
 
 export const getWeatherByLocationEndpoint = (city) => {
   return `${BASE_URL + FORECAST_LOOKUP_METHOD + API_KEY}&q=${city}${CONFIG}`;
+};
+
+export const getRegionsForAutocompleteEndpoint = (string) => {
+  return `${BASE_URL + SEARCH_METHOD + API_KEY}&q=${string}`;
+};
+
+export const getRegionsForAutocomplete = async (string) => {
+  const endpoint = getRegionsForAutocompleteEndpoint(string);
+  return fetch(endpoint)
+    .then((res) => res.json())
+    .then((data) => {
+      const obj = data;
+      return obj;
+    });
 };
 
 export const getIPInfoEndpoint = async () => {
@@ -29,8 +44,12 @@ export const getIPInfo = async () => {
     });
 };
 
-export const getWeatherInfo = async () => {
+export const getWeatherInfoFromIP = async () => {
   return await getIPInfo().then((obj) => {
     return fetch(getWeatherByLocationEndpoint(obj.city));
   });
+};
+
+export const getWeatherInfoFromCityAndRegion = (city) => {
+  return fetch(getWeatherByLocationEndpoint(city));
 };

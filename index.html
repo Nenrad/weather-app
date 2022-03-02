@@ -10,12 +10,14 @@
   <body>
     <div class="detail-bar">
       <section class="detail-bar__search">
-        <input />
+        <input class="detail-bar__search__input" />
         <button type="submit">
           <img src="img/search-icon.svg" width="25px" />
         </button>
       </section>
+      <div class="dropdown"></div>
       <section class="detail-bar__details-section">
+        <hr />
         <h1>Weather Details</h1>
         <div class="detail-bar__details-section__details">
           <h2 id="feelslike_f" class="details__feels-like details__detail">
@@ -42,7 +44,7 @@
     <div class="container">
       <div class="unit-selector">
         <span class="unit-selector__fahrenheit" role="button">°F</span>
-        <span>|</span>
+        <span style="color: rgb(68, 68, 68)">|</span>
         <span class="unit-selector__celsius inactive-unit" role="button"
           >°C</span
         >

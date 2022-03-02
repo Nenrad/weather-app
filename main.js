@@ -2,12 +2,18 @@ import {
   getWeatherByLocationEndpoint,
   getIPInfoEndpoint,
   getIPInfo,
-  getWeatherInfo,
+  getWeatherInfoFromIP,
+  getRegionsForAutocomplete,
+  getRegionsForAutocompleteEndpoint,
+  getWeatherInfoFromCityAndRegion,
 } from "./fetchdata.js";
 
 const unitSelectorFahrenheitEl = document.querySelector(
   ".unit-selector__fahrenheit"
 );
+let dropdownItems = document.querySelectorAll(".dropdown-item");
+const dropdownEl = document.querySelector(".dropdown");
+const searchInputEl = document.querySelector(".detail-bar__search__input");
 const weatherDetailEls = document.querySelectorAll(".details__detail");
 const unitSelectorCelsiusEl = document.querySelector(".unit-selector__celsius");
 const weatherSummaryEl = document.querySelector(".weather-summary");
@@ -88,16 +94,18 @@ const displayWeather = (data) => {
   weatherDetailEls.forEach(function (element) {
     let child = document.createElement("span");
     let valueEl = element.querySelector("span");
-    console.log(valueEl);
+    if (valueEl.firstChild) {
+      valueEl.removeChild(valueEl.firstChild);
+      console.log("yes");
+    }
     child.innerText = ` ${data.current[`${element.id}`]}`;
     valueEl.appendChild(child);
   });
 };
 
-getWeatherInfo()
+getWeatherInfoFromIP()
   .then((res) => res.json())
   .then((data) => {
-    console.log(data);
     displayWeather(data);
   });
 
@@ -114,3 +122,40 @@ unitSelectorFahrenheitEl.addEventListener("click", function () {
   realTempC.classList.add("hidden");
   realTempF.classList.remove("hidden");
 });
+
+const displayAutocompleteOptions = (obj, input) => {
+  for (let i in obj) {
+    let dropdownItem = document.createElement("div");
+    dropdownItem.classList.add("dropdown-item");
+    let location = `${obj[i].name}, ${obj[i].region}`;
+    dropdownItems = document.querySelectorAll(".dropdown-item");
+    console.log(dropdownItems);
+    if (location.includes(input) && obj[i].name && obj[i].region) {
+      dropdownItem.innerText = location;
+      dropdownEl.appendChild(dropdownItem);
+    }
+  }
+};
+
+searchInputEl.addEventListener("keyup", () => {
+  while (dropdownEl.firstChild) {
+    dropdownEl.removeChild(dropdownEl.lastChild);
+  }
+  getRegionsForAutocomplete(searchInputEl.value).then((res) => {
+    let input = searchInputEl.value;
+    displayAutocompleteOptions(res, input);
+    addEventListenersToDropdownItems();
+  });
+});
+
+const addEventListenersToDropdownItems = () => {
+  dropdownItems.forEach((el) => {
+    el.addEventListener("click", () => {
+      getWeatherInfoFromCityAndRegion(el.innerText)
+        .then((res) => res.json())
+        .then((data) => {
+          displayWeather(data);
+        });
+    });
+  });
+};
