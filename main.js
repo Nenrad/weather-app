@@ -8,8 +8,12 @@ import {
   getWeatherInfoFromCityAndRegion,
 } from "./fetchdata.js";
 
+const searchEl = document.querySelector(".detail-bar__search__input");
 const unitSelectorFahrenheitEl = document.querySelector(
   ".unit-selector__fahrenheit"
+);
+const saveLocationButtonEl = document.querySelector(
+  ".detail-bar__save-locations__header__button"
 );
 let dropdownItems = document.querySelectorAll(".dropdown-item");
 const dropdownEl = document.querySelector(".dropdown");
@@ -65,6 +69,8 @@ const days = [
   "Sunday",
 ];
 
+const savedLocations = [];
+
 const updateTime = () => {
   setTimeout(function () {
     updateTime();
@@ -84,10 +90,13 @@ const updateTime = () => {
 
 updateTime();
 
+let currentLocation;
+
 const displayWeather = (data) => {
   realTempF.innerText = `${data.current.temp_f}°`;
   realTempC.innerText = `${data.current.temp_c}°`;
   cityEl.innerText = data.location.name;
+  currentLocation = `${data.location.name}, ${data.location.region}`;
   conditionText.innerText = data.current.condition.text;
   conditionIcon.setAttribute("src", data.current.condition.icon);
   realTempC.classList.add("hidden");
@@ -150,7 +159,9 @@ searchInputEl.addEventListener("keyup", () => {
 
 const addEventListenersToDropdownItems = () => {
   dropdownItems.forEach((el) => {
-    el.addEventListener("click", () => {
+    el.addEventListener("click", (event) => {
+      dropdownEl.classList.add("hidden");
+      event.stopPropagation();
       getWeatherInfoFromCityAndRegion(el.innerText)
         .then((res) => res.json())
         .then((data) => {
@@ -159,3 +170,32 @@ const addEventListenersToDropdownItems = () => {
     });
   });
 };
+
+searchEl.addEventListener("click", (event) => {
+  dropdownEl.classList.remove("hidden");
+  event.stopPropagation();
+});
+
+document.body.addEventListener("click", () => {
+  dropdownEl.classList.add("hidden");
+  console.log(dropdownEl);
+});
+
+saveLocationButtonEl.addEventListener("click", () => {
+  if (!savedLocations.includes(currentLocation)) {
+    savedLocations.push(currentLocation);
+    let savedLocationEl = document.createElement("div");
+    savedLocationEl.classList.add(
+      "detail-bar__saved-locations__locations__location"
+    );
+    let locationsEl = document.querySelector(
+      ".detail-bar__saved-locations__locations"
+    );
+    savedLocationEl.innerHTML = `
+    <aside>${currentLocation}</aside>
+    <button>Delete</button>
+    `;
+    locationsEl.appendChild(savedLocationEl);
+  }
+  console.log(savedLocations);
+});

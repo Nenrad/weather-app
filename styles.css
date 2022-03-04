@@ -43,22 +43,22 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 50px;
+  width: 100px;
   height: 50px;
   border: none;
   border-left: 1px solid rgb(19, 19, 19);
 }
 
 .detail-bar__search input {
+  height: 50px;
   padding: 2px;
   color: white;
   border-right: 1px solid rgb(19, 19, 19);
   outline: none;
   background-color: transparent;
   border: none;
-  width: 250px;
+  width: 200px;
   font-size: 1.5rem;
-  font-family: Montserrat;
 }
 
 .dropdown {
@@ -78,7 +78,52 @@ body {
 }
 
 .detail-bar__details-section {
-  margin: auto 10px 100px 10px;
+  margin: auto 10px 0px 10px;
+}
+
+.detail-bar__saved-locations {
+  margin: 10px 10px 0px 10px;
+}
+
+.detail-bar__saved-locations__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.detail-bar__saved-locations p {
+  text-align: center;
+  color: grey;
+}
+
+.detail-bar__saved-locations__header button {
+  font-family: Montserrat;
+  margin-right: 12px;
+  border: none;
+  background-color: green;
+  font-weight: 100;
+  font-size: 12px;
+  height: 20px;
+  width: 80px;
+}
+
+.detail-bar__saved-locations h1 {
+  margin: 20px 0px;
+  font-size: 1.5rem;
+  font-family: Montserrat;
+  font-weight: 100;
+}
+
+.detail-bar__saved-locations__locations__location {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 10px 0px 10px 0px;
+}
+
+.detail-bar__saved-locations__locations__location button {
+  border: none;
+  background-color: transparent;
 }
 
 .detail-bar__details-section hr {
