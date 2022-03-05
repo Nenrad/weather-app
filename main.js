@@ -8,6 +8,9 @@ import {
   getWeatherInfoFromCityAndRegion,
 } from "./fetchdata.js";
 
+let deleteButtonEls = document.querySelectorAll(
+  ".detail-bar__saved-locations__locations__location__delete-button"
+);
 const searchEl = document.querySelector(".detail-bar__search__input");
 const unitSelectorFahrenheitEl = document.querySelector(
   ".unit-selector__fahrenheit"
@@ -182,20 +185,41 @@ document.body.addEventListener("click", () => {
 });
 
 saveLocationButtonEl.addEventListener("click", () => {
-  if (!savedLocations.includes(currentLocation)) {
-    savedLocations.push(currentLocation);
+  let buttonId = currentLocation.replace(/\s/g, "").replace(/,/g, "");
+  if (
+    !savedLocations.includes(
+      currentLocation.replace(/\s/g, "").replace(/,/g, "")
+    )
+  ) {
+    savedLocations.push(currentLocation.replace(/\s/g, "").replace(/,/g, ""));
     let savedLocationEl = document.createElement("div");
     savedLocationEl.classList.add(
       "detail-bar__saved-locations__locations__location"
     );
+    savedLocationEl.setAttribute("id", `container-for-${buttonId}`);
     let locationsEl = document.querySelector(
       ".detail-bar__saved-locations__locations"
     );
     savedLocationEl.innerHTML = `
     <aside>${currentLocation}</aside>
-    <button>Delete</button>
+    <button class="detail-bar__saved-locations__locations__location__delete-button" id="${buttonId}">Delete</button>
     `;
+    deleteButtonEls = document.querySelectorAll(
+      ".detail-bar__saved-locations__locations__location__delete-button"
+    );
     locationsEl.appendChild(savedLocationEl);
+    deleteButtonEls.forEach((el) => {
+      el.addEventListener("click", () => {
+        let container = document.getElementById(`container-for-${el.id}`);
+        console.log(container);
+        container.remove();
+        savedLocations.splice(
+          indexOf(currentLocation.replace(/\s/g, "").replace(/,/g, "")),
+          1
+        );
+      });
+    });
+    console.log(deleteButtonEls);
   }
   console.log(savedLocations);
 });
