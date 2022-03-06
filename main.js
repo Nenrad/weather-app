@@ -47,6 +47,157 @@ weatherSummaryEl.appendChild(realTempF);
 weatherSummaryEl.appendChild(cityAndTimeEl);
 weatherSummaryEl.appendChild(conditionEl);
 
+retrieveAndDisplayWeatherData();
+
+searchEl.addEventListener("click", (event) => {
+  dropdownEl.classList.remove("hidden");
+  event.stopPropagation();
+});
+
+document.body.addEventListener("click", () => {
+  dropdownEl.classList.add("hidden");
+  console.log(dropdownEl);
+});
+
+searchInputEl.addEventListener("keyup", updateAutocompleteOptions);
+
+searchInputEl.addEventListener("click", updateAutocompleteOptions);
+
+saveLocationButtonEl.addEventListener("click", displaySavedLocation);
+
+//FUNCTIONS TO ADD EVENT LISTENERS
+function addEventListenersToDeleteButtons() {
+  deleteButtonEls.forEach((el) => {
+    el.addEventListener("click", () => {
+      let container = document.getElementById(`container-for-${el.id}`);
+      console.log(container);
+      container.remove();
+      savedLocations.splice(savedLocations.indexOf(el.id), 1);
+    });
+  });
+}
+
+function addEventListenersToDropdownItems() {
+  dropdownItems.forEach((el) => {
+    el.addEventListener("click", (event) => {
+      searchInputEl.value = "";
+      dropdownEl.classList.add("hidden");
+      event.stopPropagation();
+      getWeatherInfoFromCityAndRegion(el.innerText)
+        .then((res) => res.json())
+        .then((data) => {
+          displayWeather(data);
+        });
+    });
+  });
+}
+
+//DISPLAYING FUNCTIONS
+
+function displayAutocompleteOptions(obj, input) {
+  for (let i in obj) {
+    let dropdownItem = document.createElement("div");
+    dropdownItem.classList.add("dropdown-item");
+    let location = `${obj[i].name}, ${obj[i].region}`;
+    dropdownItems = document.querySelectorAll(".dropdown-item");
+    console.log(dropdownItems);
+    if (location.includes(input) && obj[i].name && obj[i].region) {
+      dropdownItem.innerText = location;
+      dropdownEl.appendChild(dropdownItem);
+    }
+  }
+}
+
+function displaySavedLocation() {
+  let buttonId = currentLocation.replace(/\s/g, "").replace(/,/g, "");
+  if (
+    !savedLocations.includes(
+      currentLocation.replace(/\s/g, "").replace(/,/g, "")
+    )
+  ) {
+    savedLocations.push(currentLocation.replace(/\s/g, "").replace(/,/g, ""));
+    let savedLocationEl = document.createElement("div");
+    savedLocationEl.classList.add(
+      "detail-bar__saved-locations__locations__location"
+    );
+    savedLocationEl.setAttribute("id", `container-for-${buttonId}`);
+    let locationsEl = document.querySelector(
+      ".detail-bar__saved-locations__locations"
+    );
+    savedLocationEl.innerHTML = `
+    <aside>${currentLocation}</aside>
+    <button class="detail-bar__saved-locations__locations__location__delete-button" id="${buttonId}">Delete</button>
+    `;
+    locationsEl.appendChild(savedLocationEl);
+    deleteButtonEls = document.querySelectorAll(
+      ".detail-bar__saved-locations__locations__location__delete-button"
+    );
+    addEventListenersToDeleteButtons();
+  }
+}
+
+function displayWeather(data) {
+  realTempF.innerText = `${data.current.temp_f}°`;
+  realTempC.innerText = `${data.current.temp_c}°`;
+  cityEl.innerText = data.location.name;
+  currentLocation = `${data.location.name}, ${data.location.region}`;
+  conditionText.innerText = data.current.condition.text;
+  conditionIcon.setAttribute("src", data.current.condition.icon);
+  realTempC.classList.add("hidden");
+  weatherDetailEls.forEach(function (element) {
+    let child = document.createElement("span");
+    let valueEl = element.querySelector("span");
+    if (valueEl.firstChild) {
+      valueEl.removeChild(valueEl.firstChild);
+      console.log("yes");
+    }
+    child.innerText = ` ${data.current[`${element.id}`]}`;
+    valueEl.appendChild(child);
+  });
+}
+
+function updateAutocompleteOptions() {
+  while (dropdownEl.firstChild) {
+    dropdownEl.removeChild(dropdownEl.lastChild);
+  }
+  getRegionsForAutocomplete(searchInputEl.value).then((res) => {
+    let input = searchInputEl.value;
+    displayAutocompleteOptions(res, input);
+    addEventListenersToDropdownItems();
+  });
+}
+
+function retrieveAndDisplayWeatherData() {
+  getWeatherInfoFromIP()
+    .then((res) => res.json())
+    .then((data) => {
+      displayWeather(data);
+    });
+}
+
+//CLOCK FUNCTION
+function updateTime() {
+  setTimeout(function () {
+    updateTime();
+    let date = new Date();
+    let month = months[date.getMonth()];
+    let dayOfWeek = days[date.getDay()];
+    let dayOfMonth = date.getDate();
+    let hours = date.getHours();
+    let minutes = date.getMinutes();
+    let time = `${hours - 12 > 0 ? hours - 12 : hours}:${("0" + minutes).slice(
+      -2
+    )} - ${dayOfWeek}, ${month} ${dayOfMonth}`;
+    document.querySelector(".weather-summary__city-time__time").innerText =
+      time;
+  }, 1000);
+}
+
+//DECLARATIONS
+let currentLocation;
+
+let savedLocations = [];
+
 const months = [
   "Jan",
   "Feb",
@@ -72,55 +223,6 @@ const days = [
   "Sunday",
 ];
 
-const savedLocations = [];
-
-const updateTime = () => {
-  setTimeout(function () {
-    updateTime();
-    let date = new Date();
-    let month = months[date.getMonth()];
-    let dayOfWeek = days[date.getDay()];
-    let dayOfMonth = date.getDate();
-    let hours = date.getHours();
-    let minutes = date.getMinutes();
-    let time = `${hours - 12 > 0 ? hours - 12 : hours}:${("0" + minutes).slice(
-      -2
-    )} - ${dayOfWeek}, ${month} ${dayOfMonth}`;
-    document.querySelector(".weather-summary__city-time__time").innerText =
-      time;
-  }, 1000);
-};
-
-updateTime();
-
-let currentLocation;
-
-const displayWeather = (data) => {
-  realTempF.innerText = `${data.current.temp_f}°`;
-  realTempC.innerText = `${data.current.temp_c}°`;
-  cityEl.innerText = data.location.name;
-  currentLocation = `${data.location.name}, ${data.location.region}`;
-  conditionText.innerText = data.current.condition.text;
-  conditionIcon.setAttribute("src", data.current.condition.icon);
-  realTempC.classList.add("hidden");
-  weatherDetailEls.forEach(function (element) {
-    let child = document.createElement("span");
-    let valueEl = element.querySelector("span");
-    if (valueEl.firstChild) {
-      valueEl.removeChild(valueEl.firstChild);
-      console.log("yes");
-    }
-    child.innerText = ` ${data.current[`${element.id}`]}`;
-    valueEl.appendChild(child);
-  });
-};
-
-getWeatherInfoFromIP()
-  .then((res) => res.json())
-  .then((data) => {
-    displayWeather(data);
-  });
-
 unitSelectorCelsiusEl.addEventListener("click", function () {
   unitSelectorFahrenheitEl.classList.add("inactive-unit");
   unitSelectorCelsiusEl.classList.remove("inactive-unit");
@@ -135,91 +237,4 @@ unitSelectorFahrenheitEl.addEventListener("click", function () {
   realTempF.classList.remove("hidden");
 });
 
-const displayAutocompleteOptions = (obj, input) => {
-  for (let i in obj) {
-    let dropdownItem = document.createElement("div");
-    dropdownItem.classList.add("dropdown-item");
-    let location = `${obj[i].name}, ${obj[i].region}`;
-    dropdownItems = document.querySelectorAll(".dropdown-item");
-    console.log(dropdownItems);
-    if (location.includes(input) && obj[i].name && obj[i].region) {
-      dropdownItem.innerText = location;
-      dropdownEl.appendChild(dropdownItem);
-    }
-  }
-};
-
-searchInputEl.addEventListener("keyup", () => {
-  while (dropdownEl.firstChild) {
-    dropdownEl.removeChild(dropdownEl.lastChild);
-  }
-  getRegionsForAutocomplete(searchInputEl.value).then((res) => {
-    let input = searchInputEl.value;
-    displayAutocompleteOptions(res, input);
-    addEventListenersToDropdownItems();
-  });
-});
-
-const addEventListenersToDropdownItems = () => {
-  dropdownItems.forEach((el) => {
-    el.addEventListener("click", (event) => {
-      dropdownEl.classList.add("hidden");
-      event.stopPropagation();
-      getWeatherInfoFromCityAndRegion(el.innerText)
-        .then((res) => res.json())
-        .then((data) => {
-          displayWeather(data);
-        });
-    });
-  });
-};
-
-searchEl.addEventListener("click", (event) => {
-  dropdownEl.classList.remove("hidden");
-  event.stopPropagation();
-});
-
-document.body.addEventListener("click", () => {
-  dropdownEl.classList.add("hidden");
-  console.log(dropdownEl);
-});
-
-saveLocationButtonEl.addEventListener("click", () => {
-  let buttonId = currentLocation.replace(/\s/g, "").replace(/,/g, "");
-  if (
-    !savedLocations.includes(
-      currentLocation.replace(/\s/g, "").replace(/,/g, "")
-    )
-  ) {
-    savedLocations.push(currentLocation.replace(/\s/g, "").replace(/,/g, ""));
-    let savedLocationEl = document.createElement("div");
-    savedLocationEl.classList.add(
-      "detail-bar__saved-locations__locations__location"
-    );
-    savedLocationEl.setAttribute("id", `container-for-${buttonId}`);
-    let locationsEl = document.querySelector(
-      ".detail-bar__saved-locations__locations"
-    );
-    savedLocationEl.innerHTML = `
-    <aside>${currentLocation}</aside>
-    <button class="detail-bar__saved-locations__locations__location__delete-button" id="${buttonId}">Delete</button>
-    `;
-    deleteButtonEls = document.querySelectorAll(
-      ".detail-bar__saved-locations__locations__location__delete-button"
-    );
-    locationsEl.appendChild(savedLocationEl);
-    deleteButtonEls.forEach((el) => {
-      el.addEventListener("click", () => {
-        let container = document.getElementById(`container-for-${el.id}`);
-        console.log(container);
-        container.remove();
-        savedLocations.splice(
-          indexOf(currentLocation.replace(/\s/g, "").replace(/,/g, "")),
-          1
-        );
-      });
-    });
-    console.log(deleteButtonEls);
-  }
-  console.log(savedLocations);
-});
+updateTime();
