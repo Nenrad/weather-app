@@ -186,7 +186,7 @@ function updateAutocompleteOptions() {
   }
   if (searchInputEl.value) {
     getRegionsForAutocomplete(searchInputEl.value).then((res) => {
-      let input = searchInputEl.value;
+      let input = searchInputEl.value.toLowerCase();
       displayAutocompleteOptions(res, input);
       addEventListenersToDropdownItems();
     });
