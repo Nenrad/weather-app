@@ -5,6 +5,11 @@
   font-family: "Montserrat", sans-serif;
 }
 
+html,
+body {
+  height: 100%;
+}
+
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,300;0,400;0,500;0,600;0,700;1,200;1,300;1,400;1,500;1,600;1,700&family=Open+Sans:wght@400;500;700&display=swap");
 
 body {
@@ -13,7 +18,11 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #111111;
+  background-color: rgb(20, 32, 143);
+}
+
+aside {
+  cursor: pointer;
 }
 
 .hidden {
@@ -22,14 +31,15 @@ body {
 
 .detail-bar {
   font-size: 0.8rem;
-  color: white;
+  color: rgb(255, 255, 255);
   display: flex;
   flex-direction: column;
   position: absolute;
   right: 0;
   width: 300px;
   height: 100vh;
-  background-color: rgb(32, 32, 32);
+  background-color: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(5px);
 }
 
 .detail-bar__search {
@@ -93,7 +103,6 @@ body {
 
 .detail-bar__saved-locations p {
   text-align: center;
-  color: grey;
 }
 
 .detail-bar__saved-locations__header button {
@@ -147,14 +156,14 @@ body {
 }
 
 .details__detail {
-  color: rgb(107, 107, 107);
-  font-weight: 100;
+  color: rgb(136, 136, 136);
+  font-weight: 500;
   font-family: Montserrat;
   margin: 10px 0px;
 }
 
 .details__detail span {
-  color: white;
+  color: rgb(255, 255, 255);
 }
 .container {
   display: flex;
@@ -177,7 +186,7 @@ body {
 }
 
 .weather-summary {
-  color: white;
+  color: rgb(255, 255, 255);
   display: flex;
   align-items: center;
 }

@@ -56,7 +56,6 @@ searchEl.addEventListener("click", (event) => {
 
 document.body.addEventListener("click", () => {
   dropdownEl.classList.add("hidden");
-  console.log(dropdownEl);
 });
 
 searchInputEl.addEventListener("keyup", updateAutocompleteOptions);
@@ -66,11 +65,25 @@ searchInputEl.addEventListener("click", updateAutocompleteOptions);
 saveLocationButtonEl.addEventListener("click", displaySavedLocation);
 
 //FUNCTIONS TO ADD EVENT LISTENERS
+function addEventListenersToSavedLocations() {
+  let savedLocationEls = document.querySelectorAll(
+    ".detail-bar__saved-locations__locations__location__search-button"
+  );
+  savedLocationEls.forEach((el) => {
+    el.addEventListener("click", () => {
+      getWeatherInfoFromCityAndRegion(el.innerText)
+        .then((res) => res.json())
+        .then((data) => {
+          displayWeather(data);
+        });
+    });
+  });
+}
+
 function addEventListenersToDeleteButtons() {
   deleteButtonEls.forEach((el) => {
     el.addEventListener("click", () => {
       let container = document.getElementById(`container-for-${el.id}`);
-      console.log(container);
       container.remove();
       savedLocations.splice(savedLocations.indexOf(el.id), 1);
     });
@@ -93,18 +106,28 @@ function addEventListenersToDropdownItems() {
 }
 
 //DISPLAYING FUNCTIONS
-
 function displayAutocompleteOptions(obj, input) {
+  while (dropdownEl.firstChild) {
+    dropdownEl.removeChild(dropdownEl.lastChild);
+  }
+  let autocompleteLocations = [];
   for (let i in obj) {
+    let location = `${obj[i].name}, ${obj[i].region}`;
+    if (
+      location.toLowerCase().includes(input) &&
+      autocompleteLocations.indexOf(location) === -1 &&
+      obj[i].name &&
+      obj[i].region
+    ) {
+      autocompleteLocations.push(location);
+    }
+  }
+  for (let index in autocompleteLocations) {
     let dropdownItem = document.createElement("div");
     dropdownItem.classList.add("dropdown-item");
-    let location = `${obj[i].name}, ${obj[i].region}`;
     dropdownItems = document.querySelectorAll(".dropdown-item");
-    console.log(dropdownItems);
-    if (location.includes(input) && obj[i].name && obj[i].region) {
-      dropdownItem.innerText = location;
-      dropdownEl.appendChild(dropdownItem);
-    }
+    dropdownItem.innerText = autocompleteLocations[index];
+    dropdownEl.appendChild(dropdownItem);
   }
 }
 
@@ -125,7 +148,7 @@ function displaySavedLocation() {
       ".detail-bar__saved-locations__locations"
     );
     savedLocationEl.innerHTML = `
-    <aside>${currentLocation}</aside>
+    <aside class="detail-bar__saved-locations__locations__location__search-button">${currentLocation}</aside>
     <button class="detail-bar__saved-locations__locations__location__delete-button" id="${buttonId}">Delete</button>
     `;
     locationsEl.appendChild(savedLocationEl);
@@ -133,6 +156,7 @@ function displaySavedLocation() {
       ".detail-bar__saved-locations__locations__location__delete-button"
     );
     addEventListenersToDeleteButtons();
+    addEventListenersToSavedLocations();
   }
 }
 
@@ -141,6 +165,7 @@ function displayWeather(data) {
   realTempC.innerText = `${data.current.temp_c}°`;
   cityEl.innerText = data.location.name;
   currentLocation = `${data.location.name}, ${data.location.region}`;
+  currentCondition = data.current.condition.text;
   conditionText.innerText = data.current.condition.text;
   conditionIcon.setAttribute("src", data.current.condition.icon);
   realTempC.classList.add("hidden");
@@ -149,7 +174,6 @@ function displayWeather(data) {
     let valueEl = element.querySelector("span");
     if (valueEl.firstChild) {
       valueEl.removeChild(valueEl.firstChild);
-      console.log("yes");
     }
     child.innerText = ` ${data.current[`${element.id}`]}`;
     valueEl.appendChild(child);
@@ -160,11 +184,13 @@ function updateAutocompleteOptions() {
   while (dropdownEl.firstChild) {
     dropdownEl.removeChild(dropdownEl.lastChild);
   }
-  getRegionsForAutocomplete(searchInputEl.value).then((res) => {
-    let input = searchInputEl.value;
-    displayAutocompleteOptions(res, input);
-    addEventListenersToDropdownItems();
-  });
+  if (searchInputEl.value) {
+    getRegionsForAutocomplete(searchInputEl.value).then((res) => {
+      let input = searchInputEl.value;
+      displayAutocompleteOptions(res, input);
+      addEventListenersToDropdownItems();
+    });
+  }
 }
 
 function retrieveAndDisplayWeatherData() {
@@ -193,7 +219,6 @@ function updateTime() {
   }, 1000);
 }
 
-//DECLARATIONS
 let currentLocation;
 
 let savedLocations = [];
@@ -238,3 +263,5 @@ unitSelectorFahrenheitEl.addEventListener("click", function () {
 });
 
 updateTime();
+
+let currentCondition;
