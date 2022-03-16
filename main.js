@@ -91,6 +91,7 @@ function addEventListenersToDeleteButtons() {
 }
 
 function addEventListenersToDropdownItems() {
+  console.log(dropdownItems);
   dropdownItems.forEach((el) => {
     el.addEventListener("click", (event) => {
       searchInputEl.value = "";
@@ -125,9 +126,9 @@ function displayAutocompleteOptions(obj, input) {
   for (let index in autocompleteLocations) {
     let dropdownItem = document.createElement("div");
     dropdownItem.classList.add("dropdown-item");
-    dropdownItems = document.querySelectorAll(".dropdown-item");
     dropdownItem.innerText = autocompleteLocations[index];
     dropdownEl.appendChild(dropdownItem);
+    dropdownItems = document.querySelectorAll(".dropdown-item");
   }
 }
 
